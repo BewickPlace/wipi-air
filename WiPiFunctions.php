@@ -551,7 +551,7 @@ $key9 = "#";
         $b = strpos($filedata, $key8, $a);
         $b = $b + strlen($key8);
      } else {
-        $a = strpos($filedata, $key9)-1;
+        $a = strpos($filedata, $key9);
         $b = $a;
      }
      $filedata = substr_replace($filedata, $line, $a, $b-$a);
