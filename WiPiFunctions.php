@@ -540,7 +540,7 @@ $key9 = "#";
 #	Contruct output line
      $line = "";
      $share =    str_replace(" ", "\\040", $share);
-     if ($delete !== TRUE) {$line = sprintf("//%s/%s /mnt/network cifs user=\"%s\",password=\"%s\",rw,file_mode=0777,dir_mode=0777 0 0", $host, $share, $user, $password); };
+     if ($delete !== TRUE) {$line = sprintf("//%s/%s /mnt/network cifs user=\"%s\",password=\"%s\",rw,file_mode=0777,dir_mode=0777 0 0\n", $host, $share, $user, $password); };
 
 #	Identify locations for replace
 
@@ -549,11 +549,12 @@ $key9 = "#";
 #	Having found the entry we parse the line assuming all components exist
         $a = $a;
         $b = strpos($filedata, $key8, $a);
-        $b = $b + strlen($key8);
+        $b = $b + strlen($key8) + 1;
      } else {
         $a = strpos($filedata, $key9);
         $b = $a;
      }
+	echo "A:B", $a, ":", $b;
      $filedata = substr_replace($filedata, $line, $a, $b-$a);
      if (file_put_contents($drivefile, $filedata) === FALSE)
      {
