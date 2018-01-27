@@ -554,7 +554,6 @@ $key9 = "#";
         $a = strpos($filedata, $key9);
         $b = $a;
      }
-	echo "A:B", $a, ":", $b;
      $filedata = substr_replace($filedata, $line, $a, $b-$a);
      if (file_put_contents($drivefile, $filedata) === FALSE)
      {
