@@ -147,7 +147,7 @@ $hostnamefile = '/etc/hostname';
 #
 #	Get the hostname from the appropriate config file
 #
-return (file_get_contents($hostnamefile));
+return (rtrim(file_get_contents($hostnamefile)));
 }
 
 function updatemyhostname($name)
@@ -158,7 +158,7 @@ $hostnamefile = '/etc/hostname';
 #
 if (getmyhostname($hostnamefile) !== $name)
 {
-  if (file_put_contents($hostnamefile, $name) !== FALSE)
+  if (file_put_contents($hostnamefile, $name."\n") !== FALSE)
   {
   return (TRUE);
   }
@@ -261,11 +261,13 @@ $WiPiAirfile = '/etc/shairport.conf';
 }
 
 function getWiPiAirname() {return getWiPiAir('NAME=');}
+function getWiPiAirGPIO() {return getWiPiAir('GPIO=');}
 function getWiPiAirdebug() {return getWiPiAir('DEBUG=');}
 function getWiPiAirbuffer() {return getWiPiAir('BUFFER_FILL=');}
 function getWiPiAirdelay() {return getWiPiAir('DELAY=');}
 
 function updateWiPiAirname($name){return updateWiPiAir('NAME=',$name);}
+function updateWiPiAirGPIO($name){return updateWiPiAir('GPIO=',$name);}
 function updateWiPiAirdebug($name){return updateWiPiAir('DEBUG=',$name);}
 function updateWiPiAirbuffer($name){return updateWiPiAir('BUFFER_FILL=',$name);}
 function updateWiPiAirdelay($name){return updateWiPiAir('DELAY=',$name);}

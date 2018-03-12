@@ -54,12 +54,11 @@ $wirelessmode = "";
 
   $remotename = "";
 
-  if (($_SERVER["REQUEST_METHOD"] == "POST")
+    if ((isset($_POST["submit"]))
 	AND (($_POST["submit"] === "Edit Values")
 	OR ($_POST["submit"] === "Add")
 	OR ($_POST["submit"] === "Delete")
-	OR ($_POST["submit"] === "Apply Changes")))
-  {
+	OR ($_POST["submit"] === "Apply Changes"))) {
     $hostname = test_input($_POST["hostname"]);
     $speakername = test_input($_POST["speakername"]);
 
@@ -100,17 +99,12 @@ $wirelessmode = "";
   else
   {
     $hostname = getmyhostname();
-    $hostIPaddress = $_SERVER['SERVER_ADDR']; 
+    $hostIPaddress = $_SERVER['SERVER_ADDR'];
     $speakername = getWiPiAirname();
     $networks = getnetworknames();
 
-#    if (isset($_POST["submit"])) echo "Submit received", $_POST["submit"], "<br>";
-#    if (isset($_POST["checkbox"])) echo "checkbox received", $_POST["checkbox"], "<br>";
-
-    if ($_SERVER["REQUEST_METHOD"] == "POST")
-    {
-    switch ($_POST["submit"])
-    {
+    if(isset($_POST['submit'])) {
+    switch ($_POST["submit"])   {
     case "Shutdown WiPi-Air":
       ?><script>window.location.href = "wait.php";</script><?php
       requestrestart(FALSE);
@@ -164,6 +158,16 @@ $wirelessmode = "";
 	$ACmode = "unchecked";
 	break;
   }
+    if(isset($_POST['gpiomode'])) {
+    switch($_POST["gpiomode"]) {
+    case "TRUE":
+	updateWiPiAirGPIO("-g");
+	break;
+    case "FALSE":
+	updateWiPiAirGPIO("");
+	break;
+    }
+    }
   ?>
 
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
@@ -251,8 +255,17 @@ $wirelessmode = "";
      <input type="submit" name="submit" value="Reset Values">
      <?php
    }
+	$gpiomode = ((getWiPiAirGPIO() == "-g")? "checked":"unchecked");
    ?>
-   <br><br>
+	</form>
+        </p>
+	<p>
+	<form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
+	<input type="hidden" name="gpiomode" value="FALSE">
+	Amplifier Sleep control:      <input type="checkbox" name="gpiomode" Value="TRUE" <?php echo $gpiomode ?> onchange="this.form.submit()"> <br>
+	</form>
+        </p>
+   <p>
    Wi-Fi Status:
    <?php
    exec('lsusb',$lsusb,$iwreturn);
@@ -286,8 +299,6 @@ $wirelessmode = "";
   </form>
   </p>
 
-  </p>
- 
 <?php
 #
 #	Footer section of page

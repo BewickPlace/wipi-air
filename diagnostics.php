@@ -38,7 +38,7 @@ $class_system = "";
 #
 #	Get diagnostic mode eiether as a parameter or as hidden field on forms
 #
-$diagnostic_mode = (!empty($_GET['diagmode']) ? $_GET['diagmode'] : $_POST['Diagselect']);
+$diagnostic_mode = (!empty($_GET['diagmode']) ? $_GET['diagmode'] : (isset($_POST['Diagselect']) ? $_POST['Diagselect'] : "" ));
 #echo $diagnostic_mode, "<br>";
 switch($diagnostic_mode)
 {
@@ -87,10 +87,8 @@ default:
 #	var_dump($_POST);
 #	echo "<br><br>";
 #
-	if ($_SERVER["REQUEST_METHOD"] == "POST")
-	{
-	  switch ($_POST["submit"])
-	  {
+	if (isset($_POST['submit'])) {
+	  switch ($_POST["submit"]) {
 	  case "Select Diagnostics":
 #	   No extra functions to perform
 	    break;
@@ -113,9 +111,9 @@ default:
 	    if (unlink($logfile) == 0) {echo "<font color='red'>Delete (",$logfile,") failed - check permissions<font color='black'><br><br>";}
 	    break;
 	  }
-
-	  switch($_POST["verbose"])
-	  {
+	}
+	  if(isset($_POST['verbose'])) {
+	  switch($_POST["verbose"]) {
           case "TRUE":
 	    updateWIPiAirdebug("-v");
 
