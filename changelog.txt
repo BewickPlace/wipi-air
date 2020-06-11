@@ -6,60 +6,17 @@
 Version  Date         Kernel    Changes
 =======  ====         ======    =======
 
-4.04     03-12-2017   4.4.34+   Support wireless 802.11ac configuration
-
-4.03     25-11-2017   4.4.34+   Monthly purge of major log files
-
-4.02     29-04-2017   4.4.34+   Edit available network bands
-
-4.01     03-03-2017   4.4.34+   Shairport handle network error
-
-4.00(beta)23-01-2017  4.4.34+   New Kernel & AC600 Debug Driver
-
-3.04     18-01-2016   4.1.13+   Spotify user logout Web update
-
-3.03     17-01-2016   4.1.13+   Shairport User-Agent compatibility upgrade
-
-3.02     12-01-2016   4.1.13+   Shairport reset fix and minor web tidy up
-
-3.01     08-01-2016   4.1.13+   Improved Shairport time sync & AC600 dual-band driver
-
-3.00     14-12-2015   4.1.13+   Upgrade to Raspian Jessie + package upgrades
-
-2.11     10-12-2015   3.12.22+  New Web interface, monitor log & minor fixes
-
-2.10     25-11-2015   3.12.22+  Shairport Audio Latency & Overrun fixes
-
-2.01     05-11-2014   3.12.22+  Shairport minor fixes
-
-2.00     20-08-2014   3.12.22+  Rebaseline under kernel 3.12.22+
-
-1.13     25-07-2014   3.10.25+  Shareport time sync, new rate mech & libsoxr
-
-1.12     16-06-2014   3.10.25+  Shareport time sync, Forked-Daapd v20.0.33 with Spotify
-
-1.11     04-04-2014   3.10.25+  Shairport time synchronised playback & RT537STA driver
-
-1.10     19-03-2014   3.10.25+  Buffer Underrun/Overrun improvements plus diagnostics page
-
-1.9      21-02-2014   3.10.24+  Network connection indicator (rapid flash), forked-daapd 20.0.26
-
-1.8      10-02-2014   3.10.24+  Upgrade Shairport & forked-daapd 19.25 album art support
-
-1.7      10-01-2014   3.10.24+  Allow wireless passwords to be alphanumeric
-
-1.6      02-01-2014   3.10.24+  Upgrade to forked-daapd 19.20, plus minor config errors
-
-1.5      26-12-2013   3.10.24+  Raspbian upgrade 2013-12-20, kernel 3.10.24+
-
-1.4      24-12-2013   3.10.23+  Display Basic Wireless Lan status (iwconfig)
-
-1.3      23-12-2013   3.10.23+  Display free space for Music library
-
-1.2      13-12-2013   3.10.23+  Enable/Disable music server supported via web interface
-
-1.1      12-12-2013   3.10.23+  Added forked-daadp as a music server
-
+5.0      11-06-2020   4.19.118+ OS Lite (Buster) Baseline
+4.4      03-12-2017   4.4.34+   Support wireless 802.11ac configuration
+4.3      25-11-2017   4.4.34+   Monthly purge of major log files
+4.2      29-04-2017   4.4.34+   Edit available network bands
+4.1      03-03-2017   4.4.34+   Shairport handle network error
+4.0(beta)23-01-2017   4.4.34+   New Kernel & AC600 Debug Driver
+3.4      18-01-2016   4.1.13+   Spotify user logout Web update
+3.3      17-01-2016   4.1.13+   Shairport User-Agent compatibility upgrade
+3.2      12-01-2016   4.1.13+   Shairport reset fix and minor web tidy up
+3.1      08-01-2016   4.1.13+   Improved Shairport time sync & AC600 dual-band driver
+3.0      14-12-2015   4.1.13+   Upgrade to Raspian Jessie + package upgrades
+2.0      20-08-2014   3.12.22+  Rebaseline under kernel 3.12.22+
 1.0      25-11-2013   3.10.19+  Initial release
-
 0.5      20-06-2013   3.6.11+   Beta release
