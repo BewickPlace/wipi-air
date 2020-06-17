@@ -12,6 +12,7 @@ require 'WiPiFunctions.php';
 #
 #	Define local variables
 #
+$librarynsamed = FALSE;
 $remoteenabled = FALSE;
 $libraryrescanned = FALSE;
 ?>
@@ -44,8 +45,6 @@ $libraryrescanned = FALSE;
 #
 #  var_dump($_POST);
 
-  $remotename = "";
-
 #    if (isset($_POST["submit"])) echo "Submit received", $_POST["submit"], "<br>";
 #    if (isset($_POST["checkbox"])) echo "checkbox received", $_POST["checkbox"], "<br>";
 
@@ -53,6 +52,12 @@ $libraryrescanned = FALSE;
     {
     switch ($_POST["submit"])
     {
+    case "Library Name":
+      $library  = test_input($_POST["library"]);
+      updatedaapdlibname($library);
+      $librarynamed = TRUE;
+	 break;
+
     case "Network Share":
       $host     = test_input($_POST["host"]);
       $share    = test_input($_POST["share"]);
@@ -84,8 +89,7 @@ $libraryrescanned = FALSE;
 	 break;
     case "Enable Remote":
       $daapd=getdaapdname();
-      $remotename = test_input($_POST["remotename"]);
-      enableremote($daapd, $remotename, test_input($_POST["pin1"]), test_input($_POST["pin2"]), test_input($_POST["pin3"]), test_input($_POST["pin4"]));
+      enableremote($daapd, test_input($_POST["pin1"]), test_input($_POST["pin2"]), test_input($_POST["pin3"]), test_input($_POST["pin4"]));
       $remoteenabled = TRUE;
 	 break;
     case "Restart Server":
@@ -143,11 +147,16 @@ $libraryrescanned = FALSE;
         } else {
            echo " or choose Network Share";
         }
+	$library = getdaapdlibname();
 	$spotifyuser = getspotifyuser();
 	?>
 	</form>
 	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
 	<br>
+	<input type="submit" name="submit" value="Library Name">
+	Name:	<input type="text" name="library"     value="<?php echo $library ?>" size= 25 maxlength=23 pattern="[a-zA-Z0-9_-.]+"  title="Alphanumeric and -_._">
+	<?php if ($librarynamed) echo "<font color='Red'>New library name...restart server and re-enable remote<font color='Black'>"; ?>
+	<br><br>
 	<input type="submit" name="submit" value="Network Share">
 	Server:  <input type="text" name="host"     value="<?php echo $host ?>"     size= 17 maxlength=15 pattern="[a-zA-Z0-9_-]+"  title="Alphanumeric and - or _">
 	Share:   <input type="text" name="share"    value="<?php echo $share ?>"    size= 16 maxlength=14 pattern="[a-zA-Z0-9_- ]+" title="Alphanumeric and - or _ or space">
@@ -166,7 +175,6 @@ $libraryrescanned = FALSE;
 	</form>
 	<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
 	<input type="submit" name="submit" value="Enable Remote">
-	Name: <input type="text" name="remotename" value="<?php echo $remotename ?>" size= 24 maxlength=20 pattern="[a-zA-Z0-9_- ]+" required title="Alphanumeric and - or _ or space">
 	Pin:
 	<input type="text" name="pin1" size= 1 maxlength=1 pattern="[0-9]+" required title="Numeric">
 	<input type="text" name="pin2" size= 1 maxlength=1 pattern="[0-9]+" required title="Numeric">

@@ -427,6 +427,26 @@ $primekey = 'directories = {';
    return (getmykey($daapdfile, $primekey));
 }
 
+function getdaapdlibname()
+{
+$daapdfile = '/etc/forked-daapd.conf';
+$primekey = 'name =';
+#
+#	Get the library name for daapd server
+#
+   return (getmykey($daapdfile, $primekey));
+}
+
+function updatedaapdlibname($library)
+{
+$daapdfile = '/etc/forked-daapd.conf';
+$primekey = 'name =';
+#
+#	Update the library name for daapd server
+#
+   return (updatemykey($daapdfile, $primekey, $library));
+}
+
 function getspotifyuser()
 {
 #
@@ -616,15 +636,15 @@ function notifyspotify($directory, $user, $password)
       unlink($file);
 }
 
-function enableremote($directory, $remotename, $pin1, $pin2, $pin3, $pin4)
+function enableremote($directory, $pin1, $pin2, $pin3, $pin4)
 {
 #
 #	Enable remote for forked daapd
 #
       $tmp = "/var/www/remote.tmp";
       $file = $directory . "/remote.remote";
-      $contents = $remotename . "\n" . $pin1 . $pin2 . $pin3 . $pin4;
-#      echo "Enable Remote: ", $remotename, " ", $pin1, $pin2, $pin3, $pin4, " in ", $file, "<br>", $contents;
+      $contents = $pin1 . $pin2 . $pin3 . $pin4;
+#      echo "Enable Remote: ", $pin1, $pin2, $pin3, $pin4, " in ", $file, "<br>", $contents;
       file_put_contents($tmp, $contents);
       $p = rename($tmp, $file);
       if ($p === FALSE) echo "<font color='Red'>Write failed - check permissions<font color='Black'>", "<br><br>";
