@@ -163,6 +163,12 @@ case "System":
         $df = disk_free_space("/root")/(1024*1024*1024);
         echo "System root partition disk usage : ", sprintf("%.1f", $df), "GB free", "<br><br>";
 
+	# Display System Temp
+	#
+	exec('vcgencmd measure_temp', $temp, $ret);
+	echo "System ";
+        foreach ($temp as $value) { echo $value, "<br><br>"; }
+
 	# Display available networks
 	#
         echo "Wireless networks scan:", "<br>";
