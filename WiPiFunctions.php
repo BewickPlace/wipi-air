@@ -272,6 +272,21 @@ function updateWiPiAirdebug($name){return updateWiPiAir('DEBUG=',$name);}
 function updateWiPiAirbuffer($name){return updateWiPiAir('BUFFER_FILL=',$name);}
 function updateWiPiAirdelay($name){return updateWiPiAir('DELAY=',$name);}
 
+function getNetwork($primekey)
+{
+$WiPiHeatfile = '/etc/network/interfaces';
+  return getmykey($WiPiHeatfile,$primekey);
+}
+
+function updateNetwork($primekey, $name)
+{
+$WiPiHeatfile = '/etc/network/interfaces';
+  return updatemykey($WiPiHeatfile,$primekey,$name);
+}
+
+function getTxPower() {return getNetwork('wireless-txpower ');}
+function updateTxPower($value){return updateNetwork('wireless-txpower ',$value);}
+
 function extractBSSid($string,$key)
 {
 #
