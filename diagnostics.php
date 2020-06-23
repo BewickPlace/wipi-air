@@ -3,12 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>WiPi-Air Diagnostics page</title>
+<?php
+require 'WiPiFunctions.php';
+$hostname = getmyhostname();
+print("<title>".$hostname.": Diagnostics</title>");
+?>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <?php
-require 'WiPiFunctions.php';
 #
 #	Key Parameters
 #
