@@ -6,6 +6,7 @@
 Version  Date         Kernel    Changes
 =======  ====         ======    =======
 
+6.0      27-09-2020   5.4.51+   Kernel upgrade and compatibility fixes
 5.1      23-06-2020   4.19.118+ Minor configuration fixes
 5.0      11-06-2020   4.19.118+ OS Lite (Buster) Baseline
 4.4      03-12-2017   4.4.34+   Support wireless 802.11ac configuration
