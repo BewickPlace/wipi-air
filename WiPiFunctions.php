@@ -530,6 +530,7 @@ $key8 = "0 0";
         $a = $a + strlen($key1);
         $b = strpos($filedata, $key2, $a);
         $host =     substr($filedata, $a, $b-$a);
+        $host =     str_replace(".local", "", $host);
 
         $b = $b + strlen($key2);
         $c = strpos($filedata, $key3, $b);
@@ -575,6 +576,7 @@ $key9 = "#";
    if ($filedata !== FALSE){
 
 #	Contruct output line
+     $host = $host . ".local";
      $line = "";
      $share =    str_replace(" ", "\\040", $share);
      if ($delete !== TRUE) {$line = sprintf("//%s/%s /mnt/network cifs user=\"%s\",password=\"%s\",rw,file_mode=0777,dir_mode=0777 0 0\n", $host, $share, $user, $password); };

@@ -143,10 +143,10 @@ $libraryrescanned = FALSE;
 	<?php
 	$df = disk_free_space("/mnt/storage")/(1024*1024*1024);
 	echo "Enabled", "<br>";
-        echo "Place music files in: \\\\", $hostname,"\Music  (", sprintf("%.1f", $df), "GB free)";
+        echo "Place music files in: /", "/", $hostname,"/Music  (", sprintf("%.1f", $df), "GB free)";
         if ($network_share !== FALSE)
         {
-           echo " or on Network Share: \\\\", $host,"\\", $share;
+           echo " or on Network Share: /", "/", $host,"/", $share;
         } else {
            echo " or choose Network Share";
         }
