@@ -43,11 +43,12 @@ print("<title>".$hostname.": About</title>");
   <p>
    This computer has the following components installed :
   <ul>
-  <li>Raspbian operating system</li>
+  <li>Raspberry Pi OS</li>
   <li>Samba file sharing</li>
   <li>Lighttpd & PHP Web Server</li>
-  <li>WiringPi GPIO library</li>  
+  <li>WiringPi GPIO library</li>
   <li>Shairport music player</li>
+  <li>Raspotify music player</li>
   <li>Forked-daapd music server</li>
   </ul>
   </p>

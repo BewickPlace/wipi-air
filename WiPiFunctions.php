@@ -84,11 +84,16 @@ $quality = 0;
 $x = $y = $z =0;
 
 #	Identify line 4 or 5 for Signal information
+
 $idx = 4;
-$x = strpos($input[$idx], $key1);
+if (isset($input[$idx])){
+   $x = strpos($input[$idx], $key1);
+}
 if (!$x) {
    $idx = 5;
-   $x = strpos($input[$idx], $key1);
+   if (isset($input[$idx])){
+      $x = strpos($input[$idx], $key1);
+   }
    if (!$x) return; 
 }
 
@@ -260,14 +265,34 @@ $WiPiAirfile = '/etc/shairport.conf';
   return updatemykey($WiPiAirfile,$primekey,$name);
 }
 
+function updateRaspotify($primekey, $name)
+{
+$WiPiAirfile = '/etc/default/raspotify';
+  return updatemykey($WiPiAirfile,$primekey,$name);
+}
+
 function getWiPiAirname() {return getWiPiAir('NAME=');}
 function getWiPiAirGPIO() {return getWiPiAir('GPIO=');}
 function getWiPiAirdebug() {return getWiPiAir('DEBUG=');}
 function getWiPiAirbuffer() {return getWiPiAir('BUFFER_FILL=');}
 function getWiPiAirdelay() {return getWiPiAir('DELAY=');}
 
-function updateWiPiAirname($name){return updateWiPiAir('NAME=',$name);}
-function updateWiPiAirGPIO($name){return updateWiPiAir('GPIO=',$name);}
+function updateWiPiAirname($name){
+  updateRaspotify('DEVICE_NAME',$name);
+  return updateWiPiAir('NAME=',$name);
+}
+
+function updateWiPiAirGPIO($name){
+  if (!strcmp($name, "")) {
+echo "Here with ", $name, "<br>";
+    updateRaspotify('ONEVENT',$name);
+  } else {
+echo "Otherwise here with ", $name, "<br>";
+    updateRaspotify('ONEVENT',"--onevent /home/pi/spotify_gpio.sh");
+  }
+  return updateWiPiAir('GPIO=',$name);
+}
+
 function updateWiPiAirdebug($name){return updateWiPiAir('DEBUG=',$name);}
 function updateWiPiAirbuffer($name){return updateWiPiAir('BUFFER_FILL=',$name);}
 function updateWiPiAirdelay($name){return updateWiPiAir('DELAY=',$name);}

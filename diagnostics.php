@@ -16,11 +16,13 @@ print("<title>".$hostname.": Diagnostics</title>");
 #	Key Parameters
 #
 $Shairportlogfile = "/var/log/shairport.log";
+$Raspotifylogfile = "/var/log/syslog";
 $Daapdlogfile = "/var/log/forked-daapd.log";
 $Monitorlogfile = "/var/log/monitor.log";
 $Dmesglogfile = "Dmesg";
 $Displaylines = 30;
 $class_shairport = "";
+$class_raspotify = "";
 $class_daapd = "";
 $class_monitor = "";
 $class_system = "";
@@ -45,6 +47,10 @@ $diagnostic_mode = (!empty($_GET['diagmode']) ? $_GET['diagmode'] : (isset($_POS
 #echo $diagnostic_mode, "<br>";
 switch($diagnostic_mode)
 {
+case "Raspotify":
+    $logfile =  $Raspotifylogfile;
+    $class_raspotify = "current";
+    break;
 case "Forked-Daapd":
     $logfile =  $Daapdlogfile;
     $class_daapd = "current";
@@ -76,6 +82,7 @@ default:
  </ol>
  <ol id="toc1">
     <li class=<?php echo $class_shairport ?>><a href="diagnostics.php?diagmode=Shairport">WiPi-Air Speaker</a></li>
+    <li class=<?php echo $class_raspotify ?>><a href="diagnostics.php?diagmode=Raspotify">WiPi-Air Raspotify</a></li>
     <li class=<?php echo $class_daapd     ?>><a href="diagnostics.php?diagmode=Forked-Daapd">WiPI-Air Music Player</a></li>
     <li class=<?php echo $class_monitor   ?>><a href="diagnostics.php?diagmode=Monitor">System Monitor</a></li>
     <li class=<?php echo $class_system    ?>><a href="diagnostics.php?diagmode=System">System Information</a></li>
@@ -139,6 +146,16 @@ default:
 #
 switch($diagnostic_mode)
 {
+case "Raspotify":
+?>
+    <h2>WiPi-Air Raspotify Diagnostics</h2>
+    <p>
+
+    No options currently available.
+    <p>
+<?php
+    break;
+
 case "Forked-Daapd":
 ?>
     <h2>WiPi-Air Music Player (Forked-daapd) Diagnostics</h2>
@@ -227,7 +244,9 @@ default:
        <p>
 <?php
 	echo $diagnostic_mode, " log file: ";
-        if ($logfile == $Dmesglogfile) {
+	if ($logfile == $Raspotifylogfile) {
+           $cmd = sprintf("sudo cat %s | grep spot | tail -n%s",$logfile, $Displaylines);
+	} else if ($logfile == $Dmesglogfile) {
            $cmd = sprintf("dmesg -T | tail -n%s",$Displaylines);
         } else {
            $cmd = sprintf("tail -n%s %s",$Displaylines,$logfile);

@@ -122,6 +122,9 @@ $wirelessmode = "";
     case "Restart Shairport":
       processrestart("shairport");
 	 break;
+    case "Restart Raspotify":
+      processrestart("raspotify");
+	 break;
     }
     }
   }
@@ -179,7 +182,7 @@ $wirelessmode = "";
 
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
    Host name: <input type="text" name="hostname" value=<?php echo $hostname?> <?php echo $readform ?> size=14 maxlength=12  pattern="[a-zA-Z0-9_-]+" required title="Alphanumeric and - or _"> at IP address: <?php echo $hostIPaddress ?><br>
-   WiPi-Air Speaker name: <input type="text" name="speakername" value=<?php echo $speakername ?> <?php echo $readform ?> size= 14 maxlength=12 pattern="[a-zA-Z0-9_-]+" required title="Alphanumeric and - or _"><br><br><br>
+   WiPi-Air Speaker name: <input type="text" name="speakername" value="<?php echo $speakername ?>" <?php echo $readform ?> size= 14 maxlength=12 pattern="[a-zA-Z0-9_- ]+" required title="Alphanumeric and - or _"><br><br><br>
 
    Wi-Fi Configuration Details:    <br><br>
    <?php
@@ -235,6 +238,7 @@ $wirelessmode = "";
    <input type="submit" name="submit" value="Restart WiPi-Air">
    <input type="submit" name="submit" value="Restart WiFi Network">
    <input type="submit" name="submit" value="Restart Shairport">
+   <input type="submit" name="submit" value="Restart Raspotify">
    <?php
    }
    else
