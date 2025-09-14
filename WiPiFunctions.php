@@ -9,18 +9,12 @@
 #	all files must allow R/W access
 #
 #	/etc/hostname
-#	/etc/shairport.conf
-#       /etc/wpa_supplicant/wpa_supplicant.conf
-#       /etc/forked-daapd.conf
 #
 #	Define the major functions to be used:
 #	- extractstring/updatestring/updatekey
 #	- getmyhostname/updatemyhostname
 #	- getWiPiAirname/updateWiPiAirname
-#	- getWiPiAirDebug/updateWiPiAirDebug
-#	- getWiPiAirBuffer/updateWiPiAirBuffer
 #	- getneworknames/updatenetworknames
-#	- getdaapd/enabledaapd
 
 function extractstring($string,$key)
 {
@@ -232,229 +226,119 @@ function updatemykey($file, $primekey, $name)
   }
 }
 
-function getWirelessMode()
-{
-$NetworkConfig = '/etc/Wireless/RT2870STA/RT2870STA.dat';
-  return getmykey($NetworkConfig,'WirelessMode=');
-}
-
-function updateWirelessMode($band1, $band2, $ACmode)
-{
-$NetworkConfig = '/etc/Wireless/RT2870STA/RT2870STA.dat';
-  if ($ACmode)
-  {
-	$value = "13";
-	if ((!$band1) && ($band2)) { $value = "14"; }
-  } else {
-	$value = "10";
-	if (($band1) && (!$band2)) { $value = "6"; }
-	if ((!$band1) && ($band2)) { $value = "8"; }
-  }
-  return updatemykey($NetworkConfig,'WirelessMode=', $value);
-}
-
 function getWiPiAir($primekey)
 {
-$WiPiAirfile = '/etc/shairport.conf';
+$WiPiAirfile = '/etc/raspotify/conf';
   return getmykey($WiPiAirfile,$primekey);
 }
 
 function updateWiPiAir($primekey, $name)
 {
-$WiPiAirfile = '/etc/shairport.conf';
+$WiPiAirfile = '/etc/raspotify/conf';
   return updatemykey($WiPiAirfile,$primekey,$name);
 }
 
 function updateRaspotify($primekey, $name)
 {
-$WiPiAirfile = '/etc/default/raspotify';
+$WiPiAirfile = '/etc/raspotify/conf';
   return updatemykey($WiPiAirfile,$primekey,$name);
 }
 
-function getWiPiAirname() {return getWiPiAir('NAME=');}
-function getWiPiAirGPIO() {return getWiPiAir('GPIO=');}
-function getWiPiAirdebug() {return getWiPiAir('DEBUG=');}
-function getWiPiAirbuffer() {return getWiPiAir('BUFFER_FILL=');}
-function getWiPiAirdelay() {return getWiPiAir('DELAY=');}
+function getWiPiAirname() {return getWiPiAir('LIBRESPOT_NAME=');}
+function getWiPiAirGPIO() {return (getWiPiAir('LIBRESPOT_ONEVENT=') !== "" ? "-g" : "");}
 
 function updateWiPiAirname($name){
-  updateRaspotify('DEVICE_NAME',$name);
-  return updateWiPiAir('NAME=',$name);
+  return updateRaspotify('LIBRESPOT_NAME',$name);
 }
 
 function updateWiPiAirGPIO($name){
-  if (!strcmp($name, "")) {
-echo "Here with ", $name, "<br>";
-    updateRaspotify('ONEVENT',$name);
-  } else {
-echo "Otherwise here with ", $name, "<br>";
-    updateRaspotify('ONEVENT',"--onevent /home/pi/spotify_gpio.sh");
-  }
-  return updateWiPiAir('GPIO=',$name);
-}
-
-function updateWiPiAirdebug($name){return updateWiPiAir('DEBUG=',$name);}
-function updateWiPiAirbuffer($name){return updateWiPiAir('BUFFER_FILL=',$name);}
-function updateWiPiAirdelay($name){return updateWiPiAir('DELAY=',$name);}
-
-function getNetwork($primekey)
-{
-$WiPiHeatfile = '/etc/network/interfaces';
-  return getmykey($WiPiHeatfile,$primekey);
-}
-
-function updateNetwork($primekey, $name)
-{
-$WiPiHeatfile = '/etc/network/interfaces';
-  return updatemykey($WiPiHeatfile,$primekey,$name);
-}
-
-function getTxPower() {return getNetwork('wireless-txpower ');}
-function updateTxPower($value){return updateNetwork('wireless-txpower ',$value);}
-
-function extractBSSid($string,$key)
-{
-#
-#	Extract the BDDid which may or may not be present in string
-#
-  $o = strpos($string, $key);
-  if ($o) {
-    $x = $o+strlen($key);
-    $y = $x+17;
-    return substr($string, $x, $y-$x);
-  } else {
-    return "";
-  }
-}
-
-function updateBSSid($string,$key,$name)
-{
-#
-#	Update the BSSid, add to end as we use template
-#
-  $o = strpos($string, $key);
-
-  if ($o) {
-    if ($name == "") {
-       $newname = "";
-    } else {
-       $newname = $key . $name;
-    }
-    $y = $o + strlen($key)+17;
-    return substr_replace($string, $newname, $o+1, $y-$o);
-  } else {
-    if ($name == "") {
-       return $string;
-    } else {
-       $o = strpos($string, "}");
-       $newname = $key . $name . "\n";
-       return substr_replace($string, $newname, $o, 0);
-    }
-  }
+  return updateRaspotify('LIBRESPOT_ONEVENT=', ($name !== "") ? "/usr/bin/spotify_gpio.sh" : "");
 }
 
 function getnetworknames()
 {
-$networkfile = '/etc/wpa_supplicant/wpa_supplicant.conf';
-$primekey = 'network={';
-$key1 = 'ssid=';
-$key2 = 'psk=';
-$key3 = 'bssid=';
+#$networkdir = '/etc/NetworkManager/system-connections/';
+#$key1 = '.ssid:';
+#$key2 = '.psk:';
+#
+$cmd_ssid = "-s -g 802-11-wireless.ssid con show ";
+$cmd_psk  = "-s -g 802-11-wireless-security.psk con show ";
 #
 #	Get the WiFi network parameters defined by key1 & key2
 #
-  $filedata = file_get_contents($networkfile);
-  if ($filedata !== FALSE)
-  {
-    $position = strpos($filedata, $primekey);
-    if ($position !== FALSE)
+    $i = 0;
+    $done = FALSE;
+    while ( $done !== TRUE )
     {
-      $networks = explode($primekey, $filedata);
-      $n = count($networks);
-      $i = 1;
-      while ($i !== $n)
-      {
-        $output[3*($i-1)] = extractstring($networks[$i],$key1);
-        $output[(3*($i-1))+1] = extractstring($networks[$i],$key2);
-        $output[(3*($i-1))+2] = extractBSSid($networks[$i],$key3);
+	unset($filedata);
+	exec(("nmcli ".$cmd_ssid.($i+1)), $filedata, $error);
+	if ($error == 0)
+	{
+#echo "Process entry ", $i, "<br>";
+           $output[2*($i)] = implode("",$filedata);
+	   unset($filedata);
+	   exec(("sudo nmcli ".$cmd_psk.($i+1)),  $filedata, $error);
+           $output[2*($i)+1] = implode("", $filedata);
+	}
+	else
+	{
+#echo "Entries Complete ", $i, "<br>";
+   	  $done = TRUE;
+	}
         $i = $i+1;
-       }
     }
-    else
-    {
-      $output = "no networks";
-    }
-  }
-  else
-  {
-  $output = "no file";
-  }
-  return $output;
+    return $output;
 }
 
 function updatenetworknames($nets)
 {
-$networkfile = '/etc/wpa_supplicant/wpa_supplicant.conf';
-$primekey = 'network={';
-$key1 = 'ssid=';
-$key2 = 'psk=';
-$key3 = 'bssid=';
 #
 #	Update the WiFi network parameters defined by key1 & key2
 #
-if (getnetworknames() !== $nets)
-{
 
-  $filedata = file_get_contents($networkfile);
-  if ($filedata !== FALSE)
+
+$existing = getnetworknames();
+
+if ($existing !== $nets)
+{
+  $n = count($nets)/2;
+  $i = 0;
+  $d = count($existing)/2;
+
+  while ($i !== $n)
   {
-    $position = strpos($filedata, $primekey);
-    if ($position !== FALSE)
-    {
-      $networks = explode($primekey, $filedata);
-#	Clear down the old array after default entry 
-      $i = 3;
-      $n = count($networks);
-      while ($i !== $n)
-      {
-        unset($networks[$i]);
-        $i=$i+1;
-      }
-#	Then rebuild the array using default entry as template
-      $i = 0;
-      $n = count($nets)/3;
-      while ($i !== $n)
-      {
-        $i = $i+1;
-        $networks[$i] = updatestring($networks[1],$key1,$nets[3*($i-1)]);
-        $networks[$i] = updatestring($networks[$i],$key2,$nets[3*($i-1)+1]);
-        $networks[$i] = updateBSSid($networks[$i],$key3,$nets[3*($i-1)+2]);
-       }
-       $output = implode($primekey, $networks);
-	  if (file_put_contents($networkfile, $output) === FALSE)
-       {
-#	Write error
-	  echo "<font color='Red'>Write failed - check permissions<font color='Black'>", "<br><br>";
-          return(FALSE);
-       }
-    }
-    else
-    {
-#	No network data
-	return(FALSE);
-    }
-  }
-  else
-  {
-#	No file
-	return(FALSE);
-  }
+
+	switch (true)			# check for additions/removals
+	{
+    	case (($d-$n)<0):			# missing entries in directory
+	   exec(("sudo nmcli con clone 1 ".$d+1), $result, $error);
+#echo "New Clone - error code ", $error, "<br>";
+	   $d = $d + 1;
+	   break;
+   	case (($d-$n)>0):				# more entries in directory
+	   exec(("sudo nmcli con delete ".$d), $result, $error);
+#echo "Old Connection - error code ", $error, "<br>";
+	   $d = $d - 1;
+	   break;
+
+	case (($d-$n)==0):		# matching entries ...so update the detail
+	   if ($existing[(2*$i)] !== $nets[(2*$i)]) {
+#	      echo  "Update SSID: ", $i+1;
+	      exec(("sudo nmcli con mod ".($i+1)." ssid '".$nets[(2*$i)]."'"), $result, $error);
+#	      echo "- error code ssid ", $error, "<br>";
+	   }
+	   if ($existing[(2*$i)+1] !== $nets[(2*$i)+1]) {
+#	      echo  "Update Psk : ", $i+1;
+	      exec(("sudo nmcli con mod ".($i+1). " wifi-sec.psk ".$nets[(2*$i)+1]), $result, $error);
+#	      echo "- error code psk ", $error, "<br>";
+	   }
+	   $i = $i +1;
+	   break;
+	}
+ }
   return (TRUE);
 }
-else
-{
-return (FALSE);
-}
+echo "Network names the same <br>";
 }
 
 function getdaapdname()
@@ -648,17 +532,15 @@ function addnetwork(&$net,&$count,$add)
 #
 if ($add)
 {
-$net[(3*$count)]="";
-$net[(3*$count)+1]="";
-$net[(3*$count)+2]="";
+$net[(2*$count)]="";
+$net[(2*$count)+1]="";
 $count=$count+1;
 }
 else
 {
 $count=$count-1;
-unset($net[(3*$count)]);
-unset($net[(3*$count)+1]);
-unset($net[(3*$count)+2]);
+unset($net[(2*$count)]);
+unset($net[(2*$count)+1]);
 }
 }
 

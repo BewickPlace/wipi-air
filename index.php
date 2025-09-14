@@ -53,8 +53,7 @@ $wirelessmode = "";
 #	Obtain configuration data from files or returned POST
 #
 #
-#  var_dump($_POST);
-
+# var_dump($_POST);
   $remotename = "";
 
     if ((isset($_POST["submit"]))
@@ -71,7 +70,7 @@ $wirelessmode = "";
     $networks[$i] = test_input($networks[$i]);
     $i = $i+1;
     }
-    $numberofnetworks = count($networks)/3;
+    $numberofnetworks = count($networks)/2;
 
     switch ($_POST["submit"])
     {
@@ -80,12 +79,12 @@ $wirelessmode = "";
 	 break;
     case "Add":
       $readform = "";
-      $numberofnetworks = count($networks)/3;
+      $numberofnetworks = count($networks)/2;
       addnetwork($networks,$numberofnetworks,TRUE);
 	 break;
     case "Delete":
       $readform = "";
-      $numberofnetworks = count($networks)/3;
+      $numberofnetworks = count($networks)/2;
       addnetwork($networks,$numberofnetworks,FALSE);
 	 break;
     case "Apply Changes":
@@ -93,9 +92,8 @@ $wirelessmode = "";
       $up1 = updatemyhostname($hostname);
       $up2 = updateWiPiAirname($speakername);
       $up3 = updatenetworknames($networks);
-      $up4 = updateWirelessMode( isset($_POST["Band1"]),  isset($_POST["Band2"]),  isset($_POST["ACmode"]));
 
-      if ($up1 or $up2 or $up3 or $up4) $changesmade = TRUE;
+      if ($up1 or $up2 or $up3) $changesmade = TRUE;
 	 break;
     }
   }
@@ -106,7 +104,21 @@ $wirelessmode = "";
     $speakername = getWiPiAirname();
     $networks = getnetworknames();
 
-    if(isset($_POST['submit'])) {
+  }
+  $numberofnetworks = count((array)$networks)/2;
+  $hostIPaddress = $_SERVER['SERVER_ADDR'];
+
+  if(isset($_POST['gpiomode'])) {
+    switch($_POST["gpiomode"]) {
+    case "TRUE":
+      updateWiPiAirGPIO("-g");
+      break;
+    case "FALSE":
+      updateWiPiAirGPIO("");
+      break;
+    }
+  }
+  if(isset($_POST['submit'])) {
     switch ($_POST["submit"])   {
     case "Shutdown WiPi-Air":
       ?><script>window.location.href = "wait.php";</script><?php
@@ -119,110 +131,43 @@ $wirelessmode = "";
     case "Restart WiFi Network":
       processrestart("network");
 	 break;
-    case "Restart Shairport":
-      processrestart("shairport");
-	 break;
     case "Restart Raspotify":
       processrestart("raspotify");
-	 break;
-    }
+         break;
     }
   }
-  $numberofnetworks = count($networks)/3;
-  $hostIPaddress = $_SERVER['SERVER_ADDR'];
-  $wirelessmode = getWirelessMode();
-  switch ($wirelessmode)
-  {
-  case "6":
-	$Band24 = "checked";
-	$Band50 = "unchecked";
-	$ACmode = "unchecked";
-	break;
-  case "8":
-	$Band50 = "checked";
-	$Band24 = "unchecked";
-	$ACmode = "unchecked";
-	break;
-  case "10":
-	$Band50 = "checked";
-	$Band24 = "checked";
-	$ACmode = "unchecked";
-	break;
-  case "13":
-	$Band24 = "checked";
-	$Band50 = "checked";
-	$ACmode = "checked";
-	break;
-  case "14":
-	$Band24 = "unchecked";
-	$Band50 = "checked";
-	$ACmode = "checked";
-	break;
-  default:
-	$Band24 = "checked";
-	$Band50 = "checked";
-	$ACmode = "unchecked";
-	break;
-  }
-    if(isset($_POST['gpiomode'])) {
-    switch($_POST["gpiomode"]) {
-    case "TRUE":
-	updateWiPiAirGPIO("-g");
-	break;
-    case "FALSE":
-	updateWiPiAirGPIO("");
-	break;
-    }
-    }
-    if(isset($_POST['txpower'])) {
-	updatetxpower(test_input($_POST["txpower"]));
-	$changesmade = TRUE;
-    }
-  ?>
 
+  ?>
   <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
    Host name: <input type="text" name="hostname" value=<?php echo $hostname?> <?php echo $readform ?> size=14 maxlength=12  pattern="[a-zA-Z0-9_-]+" required title="Alphanumeric and - or _"> at IP address: <?php echo $hostIPaddress ?><br>
-   WiPi-Air Speaker name: <input type="text" name="speakername" value="<?php echo $speakername ?>" <?php echo $readform ?> size= 14 maxlength=12 pattern="[a-zA-Z0-9_- ]+" required title="Alphanumeric and - or _"><br><br><br>
+   WiPi-Air Speaker name: <input type="text" name="speakername" value="<?php echo $speakername ?>" <?php echo $readform ?> size= 14 maxlength=12 pattern="[a-zA-Z0-9_- ]+" required title="Alphanumeric and - or _"><br><br>
 
    Wi-Fi Configuration Details:    <br><br>
    <?php
    $i = 0;
    $r = "readonly";
    $t = "password";
-   While ($i < $numberofnetworks)
+
+  While ($i < $numberofnetworks)
    {
+#echo "Read form:",$readform, "R:", $r, "T:", $t, "<br>";
    ?>
-   SSID:      <input type="text" name="networks[<?php (3*$i) ?>]" value="<?php echo $networks[(3*$i)]?>" <?php echo $r ?> size=22 maxlength=20 pattern="[a-zA-Z0-9 _-]+" required title="Alphanumeric and -_ or space">
-   Password:  <input type=<?php echo $t?> name="networks[<?php (3*$i)+1 ?>]" value="<?php echo $networks[(3*$i)+1]?>" <?php echo $r ?> size=12 maxlength=10  pattern="[a-zA-Z0-9]+" required title="Alphanumeric">
+   SSID:      <input type="text" name="networks[<?php (2*$i) ?>]" value="<?php echo $networks[(2*$i)]?>" <?php echo $r ?> size=22 maxlength=20 pattern="[a-zA-Z0-9 _-]+" required title="Alphanumeric and -_ or space">
+   Password:  <input type=<?php echo $t?> name="networks[<?php (2*$i)+1 ?>]" value="<?php echo $networks[(2*$i)+1]?>" <?php echo $r ?> size=12 maxlength=10  pattern="[a-zA-Z0-9]+" required title="Alphanumeric">
    <?php
-   $bssid = $networks[(3*$i)+2];
-   #  Only perform for the non-default networks
-   if ($i > 0) {
-   ?>
-      BSSID: <input type="text" name="networks[<?php (3*$i)+2 ?>]" value="<?php echo $networks[(3*$i)+2]?>" <?php echo $r ?> size=18 maxlength=17  pattern="^([0-9A-F]{2}[:-]){5}([0-9A-F]{2})$"  title="MAC address">
-   <?php
-   } else {
-   ?>
-      <input type="hidden" name="networks[<?php (3*$i)+2 ?>]" value="<?php echo $networks[(3*$i)+2]?>">
-   <?php
+   if ($i == 0) {
       echo "default network (not editable)";
       $r = $readform;
       if (!$readform) $t="text";
    }
+   $i = $i+1;
    ?>
    <br>
-
    <?php
-   $i = $i+1;
    }
    if ($r == "readonly") {$r = "disabled";}
 #	Network Choice
    ?>
-   <br>
-   Network Bands:
-   2.4GHz: <input type="checkbox" name="Band1" value="TRUE" <?php echo $Band24, " ", $r ?> onchange="this.form.submit()">
-   5.0GHz: <input type="checkbox" name="Band2" value="TRUE" <?php echo $Band50, " ", $r ?> onchange="this.form.submit()">
-   AC:     <input type="checkbox" name="ACmode" value="TRUE" <?php echo $ACmode, " ", $r ?> onchange="this.form.submit()">
    <?php
 #
 #	Change the buttons depending if Edit enabled
@@ -230,14 +175,13 @@ $wirelessmode = "";
    if ($readform == "readonly")
    {
    ?>
-   <br><br>
+   <br>
    <input type="submit" name="submit" value="Edit Values">
    <?php if ($changesmade) echo "<font color='Red'>Please restart your WiPi-Air to effect changes<font color='Black'>"; ?>
    <br><br>
    <input type="submit" name="submit" value="Shutdown WiPi-Air">
    <input type="submit" name="submit" value="Restart WiPi-Air">
    <input type="submit" name="submit" value="Restart WiFi Network">
-   <input type="submit" name="submit" value="Restart Shairport">
    <input type="submit" name="submit" value="Restart Raspotify">
    <?php
    }
@@ -267,14 +211,12 @@ $wirelessmode = "";
      <?php
    }
 	$gpiomode = ((getWiPiAirGPIO() == "-g")? "checked":"unchecked");
-	$txpower = getTxPower();
      ?>
 	</form>
         </p>
 	<p>
 	<form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
 	<input type="hidden" name="gpiomode" value="FALSE">
-        Radio TX Power:            <input type="text" name="txpower"  Value= <?php echo $txpower?> size="2" maxlength="2" pattern="[0-9]+" required title ="Numeric only" onchange="this.form.submit()"> <br>
 	Amplifier Sleep control:      <input type="checkbox" name="gpiomode" Value="TRUE" <?php echo $gpiomode ?> onchange="this.form.submit()"> <br>
 	</form>
         </p>
