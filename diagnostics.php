@@ -15,15 +15,11 @@ print("<title>".$hostname.": Diagnostics</title>");
 #
 #	Key Parameters
 #
-$Shairportlogfile = "/var/log/shairport.log";
 $Raspotifylogfile = "/var/log/syslog";
-$Daapdlogfile = "/var/log/forked-daapd.log";
 $Monitorlogfile = "/var/log/monitor.log";
 $Dmesglogfile = "Dmesg";
 $Displaylines = 30;
-$class_shairport = "";
 $class_raspotify = "";
-$class_daapd = "";
 $class_monitor = "";
 $class_system = "";
 ?>
@@ -51,10 +47,6 @@ case "Raspotify":
     $logfile =  $Raspotifylogfile;
     $class_raspotify = "current";
     break;
-case "Forked-Daapd":
-    $logfile =  $Daapdlogfile;
-    $class_daapd = "current";
-    break;
 case "Monitor":
     $logfile =  $Monitorlogfile;
     $class_monitor = "current";
@@ -64,9 +56,10 @@ case "System":
     $class_system = "current";
     break;
 default:
-    $diagnostic_mode = "Shairport";
-    $logfile =  $Shairportlogfile;
-    $class_shairport = "current";
+
+#    $diagnostic_mode = "Shairport";
+#    $logfile =  $Shairportlogfile;
+#    $class_shairport = "current";
     break;
 }
 #echo $diagnostic_mode, "<br>";
@@ -75,15 +68,12 @@ default:
 ?>
  <ol id="toc">
     <li><a href="index.php" >Home</a></li>
-    <li><a href="music.php" >Music Server</a></li>
     <li><a href="changelog.php">Changelog</a></li>
     <li class="current"><a href="diagnostics.php">Diagnostics</a></li>
     <li><a href="about.php">About</a></li>
  </ol>
  <ol id="toc1">
-    <li class=<?php echo $class_shairport ?>><a href="diagnostics.php?diagmode=Shairport">WiPi-Air Speaker</a></li>
     <li class=<?php echo $class_raspotify ?>><a href="diagnostics.php?diagmode=Raspotify">WiPi-Air Raspotify</a></li>
-    <li class=<?php echo $class_daapd     ?>><a href="diagnostics.php?diagmode=Forked-Daapd">WiPI-Air Music Player</a></li>
     <li class=<?php echo $class_monitor   ?>><a href="diagnostics.php?diagmode=Monitor">System Monitor</a></li>
     <li class=<?php echo $class_system    ?>><a href="diagnostics.php?diagmode=System">System Information</a></li>
  </ol>
@@ -156,16 +146,6 @@ case "Raspotify":
 <?php
     break;
 
-case "Forked-Daapd":
-?>
-    <h2>WiPi-Air Music Player (Forked-daapd) Diagnostics</h2>
-    <p>
-
-    No options currently available.
-    <p>
-<?php
-    break;
-
 case "Monitor":
 ?>
     <h2>WiPi-Air System Monitor Diagnostics</h2>
@@ -203,25 +183,7 @@ case "System":
     break;
 
 default:
-	$verbose = ((getWiPiAirdebug() == "-v")? "checked":"unchecked");
-	$buffer = getWIPiAirbuffer();
-	$delay_time = getWIPiAirdelay();
 ?>
-	<h2>WiPi-Air Speaker (Shairport) Diagnostics</h2>
-	<p>
-
-	<form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
-	<input type="hidden" name="verbose" value="FALSE">
-	Verbose diagnostics: <input type="checkbox" name="verbose" Value="TRUE" <?php echo $verbose ?> onchange="this.form.submit()">
-	<input type="hidden" name="Diagselect" value=<?php echo $diagnostic_mode ?>>
-	</form>
-	<form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
-	Network buffer size: <input type="text" name="buffer"       value=<?php echo $buffer ?>       size=5 maxlength=3 pattern="[0-9]+" required title="Numeric">
-	Sync interval: <input type="text" name="delay_time" value =<?php echo $delay_time ?> size=6 maxlength=4 pattern="[0-9]+" required title="Numeric">
-	<input type="submit" name="submit" value="Update">
-	<input type="hidden" name="Diagselect" value=<?php echo $diagnostic_mode ?>>
-	</form>
-	<p>
 <?php
     break;
 }

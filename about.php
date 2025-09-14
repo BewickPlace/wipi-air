@@ -24,7 +24,6 @@ print("<title>".$hostname.": About</title>");
  </div>
  <ol id="toc">
     <li><a href="index.php" >Home</a></li>
-    <li><a href="music.php" >Music Server</a></li>
     <li><a href="changelog.php">Changelog</a></li>
     <li><a href="diagnostics.php">Diagnostics</a></li>
     <li class="current"><a href="about.php">About</a></li>
@@ -44,12 +43,9 @@ print("<title>".$hostname.": About</title>");
    This computer has the following components installed :
   <ul>
   <li>Raspberry Pi OS</li>
-  <li>Samba file sharing</li>
   <li>Lighttpd & PHP Web Server</li>
-  <li>WiringPi GPIO library</li>
-  <li>Shairport music player</li>
+  <li>PiGPIO library</li>
   <li>Raspotify music player</li>
-  <li>Forked-daapd music server</li>
   </ul>
   </p>
   <p>

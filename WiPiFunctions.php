@@ -339,6 +339,7 @@ if ($existing !== $nets)
   return (TRUE);
 }
 echo "Network names the same <br>";
+<<<<<<< HEAD
 }
 
 function getdaapdname()
@@ -512,6 +513,8 @@ $key9 = "#";
      echo "<font color='Red'>File Missing - check permissions<font color='Black'>", "<br><br>";
      return(FALSE);
    }
+=======
+>>>>>>> ce8db2d (Bookworm upgrade inc Network Manager and PiGPIO)
 }
 
 function test_input($data)
@@ -542,58 +545,6 @@ $count=$count-1;
 unset($net[(2*$count)]);
 unset($net[(2*$count)+1]);
 }
-}
-
-function notifyspotify($directory, $user, $password)
-{
-#
-#	Notify forked daapd of Spotify Username & Password
-#
-      $tmp = "/var/www/login.tmp";
-      $file = $directory . "/login.spotify";
-      $contents = $user . "\n" . $password;
-#      echo "Notify Spotify: ", $user, " ", $password, " in ", $file, "<br>", $contents;
-      file_put_contents($tmp, $contents);
-      $p = rename($tmp, $file);
-      if ($p === FALSE) echo "<font color='Red'>Write failed - check permissions<font color='Black'>", "<br><br>";
-      sleep(1);
-      unlink($file);
-}
-
-function enableremote($directory, $pin1, $pin2, $pin3, $pin4)
-{
-#
-#	Enable remote for forked daapd
-#
-      $tmp = "/var/www/remote.tmp";
-      $file = $directory . "/remote.remote";
-      $contents = $pin1 . $pin2 . $pin3 . $pin4;
-#      echo "Enable Remote: ", $pin1, $pin2, $pin3, $pin4, " in ", $file, "<br>", $contents;
-      file_put_contents($tmp, $contents);
-      $p = rename($tmp, $file);
-      if ($p === FALSE) echo "<font color='Red'>Write failed - check permissions<font color='Black'>", "<br><br>";
-      sleep(1);
-      unlink($file);
-}
-
-function libraryrescan($directory, $full)
-{
-#
-#	Force a rescan of Library for forked daapd
-#
-      $tmp = "/var/www/rescan.tmp";
-      if ($full === TRUE) {
-         $file = $directory . "/rescan.full-rescan";
-      }
-      else {
-         $file = $directory . "/rescan.init-rescan";
-      }
-#      echo "Library Rescan", " in ", $file, "<br><br>";
-      file_put_contents($tmp, "Please rescan\n");
-      $p = rename($tmp, $file);
-      if ($p === FALSE) echo "<font color='Red'>Write failed - check permissions<font color='Black'>", "<br><br>";
-      sleep(1);
-      unlink($file);
 }
 
 function processrestart($name)

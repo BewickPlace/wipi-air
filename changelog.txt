@@ -6,6 +6,7 @@
 Version  Date         Kernel    Changes
 =======  ====         ======    =======
 
+7.0      14-09-2025   6.12.25+  Bookworm upgrade inc Network Manager and PiGPIO
 6.1      22-11-2020   5.4.51+   Integrate Raspotify support
 6.0      27-09-2020   5.4.51+   Kernel upgrade and compatibility fixes
 5.1      23-06-2020   4.19.118+ Minor configuration fixes
