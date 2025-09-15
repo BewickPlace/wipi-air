@@ -338,7 +338,7 @@ if ($existing !== $nets)
  }
   return (TRUE);
 }
-echo "Network names the same <br>";
+#echo "Network names the same <br>";
 }
 
 function test_input($data)
