@@ -17,10 +17,12 @@ print("<title>".$hostname.": Diagnostics</title>");
 #
 $Raspotifylogfile = "/var/log/syslog";
 $Monitorlogfile = "/var/log/monitor.log";
+$Lighttpdlogfile = "/var/log/lighttpd/error.log";
 $Dmesglogfile = "Dmesg";
 $Displaylines = 30;
 $class_raspotify = "";
 $class_monitor = "";
+$class_lighttpd = "";
 $class_system = "";
 ?>
 
@@ -51,15 +53,19 @@ case "Monitor":
     $logfile =  $Monitorlogfile;
     $class_monitor = "current";
     break;
+case "Lighttpd":
+    $logfile =  $Lighttpdlogfile;
+    $class_lighttpd = "current";
+    break;
+
 case "System":
     $logfile =  $Dmesglogfile;
     $class_system = "current";
     break;
 default:
-
-#    $diagnostic_mode = "Shairport";
-#    $logfile =  $Shairportlogfile;
-#    $class_shairport = "current";
+    $diagnostic_mode = "Raspotify";
+    $logfile =  $Raspotifylogfile;
+    $class_raspotify = "current";
     break;
 }
 #echo $diagnostic_mode, "<br>";
@@ -75,6 +81,7 @@ default:
  <ol id="toc1">
     <li class=<?php echo $class_raspotify ?>><a href="diagnostics.php?diagmode=Raspotify">WiPi-Air Raspotify</a></li>
     <li class=<?php echo $class_monitor   ?>><a href="diagnostics.php?diagmode=Monitor">System Monitor</a></li>
+    <li class=<?php echo $class_lighttpd  ?>><a href="diagnostics.php?diagmode=Lighttpd">Web Service</a></li>
     <li class=<?php echo $class_system    ?>><a href="diagnostics.php?diagmode=System">System Information</a></li>
  </ol>
 
@@ -93,37 +100,15 @@ default:
 #	   No extra functions to perform
 	    break;
 
-	  case "Update":
-	    $buffer = test_input($_POST["buffer"]);
-	    $delay_time = test_input($_POST["delay_time"]);
-	    updateWiPiAirbuffer($buffer);
-	    updateWiPiAirdelay($delay_time);
-	    break;
-
 	  case "Refresh Display":
 	    $Displaylines = test_input($_POST["displaylines"]);
 	    break;
 
 	  case "Delete Logfile":
-	    $logfile = ($Shairportselect =="checked" ? $Shairportlogfile : $logfile);
-	    $logfile = ($Daapdselect    =="checked" ? $Daapdlogfile     : $logfile);
-	    $logfile = ($Shutdownselect  =="checked" ? $Shutdownlogfile  : $logfile);
 	    $cmd = '"cat /dev/null >'.$logfile.'"';
 	    $cmd = 'sudo sh -c '.$cmd;
 	    exec($cmd, $out, $ret);
 	    if ($ret!= 0) {echo "<font color='red'>Delete (",$logfile,") failed - check permissions<font color='black'><br><br>";}
-	    break;
-	  }
-	}
-	  if(isset($_POST['verbose'])) {
-	  switch($_POST["verbose"]) {
-          case "TRUE":
-	    updateWIPiAirdebug("-v");
-
-	    break;
-          case "FALSE":
-	    updateWIPiAirdebug("");
-
 	    break;
 	  }
 	}
@@ -149,6 +134,16 @@ case "Raspotify":
 case "Monitor":
 ?>
     <h2>WiPi-Air System Monitor Diagnostics</h2>
+    <p>
+
+    No options currently available.
+    <p>
+<?php
+    break;
+
+case "Lighttpd":
+?>
+    <h2>WiPi-Air Web Service Diagnostics</h2>
     <p>
 
     No options currently available.
@@ -200,14 +195,15 @@ default:
 	<form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
 	Lines to display: <input type="text" name="displaylines" value=<?php echo $Displaylines ?> size=5 maxlength=3 pattern="[0-9]+" required title="Numeric">
 	<input type="submit" name="submit" value="Refresh Display">
-	<?php if ($logfile !== $Dmesglogfile) { ?> <input type="submit" name="submit" value="Delete Logfile"><?php } ?>
+	<?php if ($logfile == $Monitorlogfile) { ?> <input type="submit" name="submit" value="Delete Logfile"><?php } ?>
+	<?php if ($logfile == $Lighttpdlogfile){ ?> <input type="submit" name="submit" value="Delete Logfile"><?php } ?>
 	<input type="hidden" name="Diagselect" value=<?php echo $diagnostic_mode ?>>
 	</form>
        <p>
 <?php
-	echo $diagnostic_mode, " log file: ";
+#	echo $diagnostic_mode, " log file: ";
 	if ($logfile == $Raspotifylogfile) {
-           $cmd = sprintf("sudo cat %s | grep spot | tail -n%s",$logfile, $Displaylines);
+           $cmd = sprintf("sudo journalctl -n%s -u raspotify", $Displaylines);
 	} else if ($logfile == $Dmesglogfile) {
            $cmd = sprintf("dmesg -T | tail -n%s",$Displaylines);
         } else {
@@ -221,7 +217,7 @@ default:
 	  echo "No log file available", "<br>";
 	  break;
 	default:
-	  echo "<br>", "<pre>";
+	  echo "<pre>";
 	  foreach ($tail as $value) { echo $value, "<br>"; }
 	  echo "</pre><br>";
 	}
