@@ -226,16 +226,10 @@ function updatemykey($file, $primekey, $name)
   }
 }
 
-function getWiPiAir($primekey)
+function getRaspotify($primekey)
 {
 $WiPiAirfile = '/etc/raspotify/conf';
   return getmykey($WiPiAirfile,$primekey);
-}
-
-function updateWiPiAir($primekey, $name)
-{
-$WiPiAirfile = '/etc/raspotify/conf';
-  return updatemykey($WiPiAirfile,$primekey,$name);
 }
 
 function updateRaspotify($primekey, $name)
@@ -244,8 +238,9 @@ $WiPiAirfile = '/etc/raspotify/conf';
   return updatemykey($WiPiAirfile,$primekey,$name);
 }
 
-function getWiPiAirname() {return getWiPiAir('LIBRESPOT_NAME=');}
-function getWiPiAirGPIO() {return (getWiPiAir('LIBRESPOT_ONEVENT=') !== "" ? "-g" : "");}
+function getWiPiAirname() {return getRaspotify('LIBRESPOT_NAME=');}
+function getWiPiAirGPIO() {return (getRaspotify('LIBRESPOT_ONEVENT=') !== "" ? "-g" : "");}
+function getInitialVolume() {return getRaspotify('LIBRESPOT_INITIAL_VOLUME=');}
 
 function updateWiPiAirname($name){
   return updateRaspotify('LIBRESPOT_NAME',$name);
@@ -253,6 +248,10 @@ function updateWiPiAirname($name){
 
 function updateWiPiAirGPIO($name){
   return updateRaspotify('LIBRESPOT_ONEVENT=', ($name !== "") ? "/usr/bin/spotify_gpio.sh" : "");
+}
+
+function updateInitialVolume($value){
+  return updateRaspotify('LIBRESPOT_INITIAL_VOLUME=', $value);
 }
 
 function getnetworknames()

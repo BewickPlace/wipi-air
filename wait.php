@@ -23,7 +23,6 @@ print("<title>".$hostname.": Shutdown or Restart</title>");
  </div>
  <ol id="toc">
     <li class="current"><a href="index.php" >Home</a></li>
-    <li><a href="music.php" >Music Server</a></li>
     <li><a href="changelog.php">Changelog</a></li>
     <li><a href="diagnostics.php">Diagnostics</a></li>
     <li><a href="about.php">About</a></li>

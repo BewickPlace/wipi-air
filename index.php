@@ -117,6 +117,10 @@ $wirelessmode = "";
       break;
     }
   }
+  if(isset($_POST['InitialVolume'])) {
+   updateInitialVolume( test_input($_POST["InitialVolume"]));
+   $changesmade = TRUE;
+  }
   if(isset($_POST['submit'])) {
     switch ($_POST["submit"])   {
     case "Shutdown WiPi-Air":
@@ -210,6 +214,7 @@ $wirelessmode = "";
      <?php
    }
 	$gpiomode = ((getWiPiAirGPIO() == "-g")? "checked":"unchecked");
+	$initialvolume = getInitialVolume();
      ?>
 	</form>
         </p>
@@ -217,6 +222,7 @@ $wirelessmode = "";
 	<form  method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" autocomplete="off">
 	<input type="hidden" name="gpiomode" value="FALSE">
 	Amplifier Sleep control:      <input type="checkbox" name="gpiomode" Value="TRUE" <?php echo $gpiomode ?> onchange="this.form.submit()"> <br>
+        Initial Volume:               <input type="text" name="InitialVolume"  Value= <?php echo $initialvolume?> size="2" maxlength="2" pattern="[0-9]+" required title ="Numeric only" onchange="this.form.submit()"> <br>
 	</form>
         </p>
    <p>

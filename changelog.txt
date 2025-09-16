@@ -6,6 +6,7 @@
 Version  Date         Kernel    Changes
 =======  ====         ======    =======
 
+7.2      16-09-2025   6.12.25+  Support Raspotify initial volume
 7.1      15-09-2025   6.12.25+  Remove Shairport and Daapd
 7.0      14-09-2025   6.12.25+  Bookworm upgrade inc Network Manager and PiGPIO
 6.1      22-11-2020   5.4.51+   Integrate Raspotify support
