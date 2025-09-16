@@ -163,7 +163,7 @@ case "System":
 
 	# Display System Temp
 	#
-	exec('vcgencmd measure_temp', $temp, $ret);
+	exec('sudo vcgencmd measure_temp', $temp, $ret);
 	echo "System ";
         foreach ($temp as $value) { echo $value, "<br><br>"; }
 
