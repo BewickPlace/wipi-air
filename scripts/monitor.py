@@ -123,13 +123,13 @@ def check_restart():
 	   except: pass
 	   try: os.system("sudo nmcli dev disconnect wlan0")
 	   except: pass
-	   time.sleep(5)
+	   time.sleep(2)
 #	   try: os.system("sudo ifup wlan0")
 	   try: os.system("sudo nmcli dev connect wlan0")
 	   except: pass
 	if os.path.isfile('/var/www/restart.raspotify-restart'):
 	   # restart raspotify
-	   logging.info('User requested Raspotify restart')
+	   logging.info('System/User requested Raspotify restart')
 	   try: os.remove('/var/www/restart.raspotify-restart')
 	   except: pass
 	   os.system("sudo systemctl restart raspotify.service")
@@ -186,10 +186,13 @@ def if_connected(ifname1, ifname2):
 	if networktimer > 9000 :
 	   networktimer = 0
 	   logging.debug('...resetting wlan network')
-	   try: plugstatus = subprocess.check_output(['ifdown', '--force', 'wlan0'])
+#	   try: plugstatus = subprocess.check_output(['ifdown', '--force', 'wlan0'])
+	   try: os.system("sudo nmcli dev disconnect wlan0")
 	   except: pass
 	   time.sleep(2)
-	   try: plugstatus = subprocess.check_output(['ifup', 'wlan0'])
+#	   try: plugstatus = subprocess.check_output(['ifup', 'wlan0'])
+	   try: os.system("sudo nmcli dev connect wlan0")
+
 	   except: pass
 	return False
 
@@ -211,6 +214,8 @@ def check_network():
 	   if networkerror !=0 :
                logging.debug('Network Up')
                networkerror = 0
+               time.sleep(2)
+               os.system("sudo touch /var/www/restart.raspotify-restart")
 	   flash = False
 	   sleeptime = 1
 	else:
