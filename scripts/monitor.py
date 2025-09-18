@@ -129,7 +129,7 @@ def check_restart():
 	   except: pass
 	if os.path.isfile('/var/www/restart.raspotify-restart'):
 	   # restart raspotify
-	   logging.info('System/User requested Raspotify restart')
+	   logging.info('User requested Raspotify restart')
 	   try: os.remove('/var/www/restart.raspotify-restart')
 	   except: pass
 	   os.system("sudo systemctl restart raspotify.service")
@@ -214,8 +214,6 @@ def check_network():
 	   if networkerror !=0 :
                logging.debug('Network Up')
                networkerror = 0
-               time.sleep(2)
-               os.system("sudo touch /var/www/restart.raspotify-restart")
 	   flash = False
 	   sleeptime = 1
 	else:
