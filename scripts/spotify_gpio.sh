@@ -12,13 +12,13 @@
 #echo TRACK_ID:     $TRACK_ID
 #echo OLD_TRACK_ID: $OLD_TRACK_ID
 if   [ "$PLAYER_EVENT" = "playing" ]; then
-    echo "SPOTIFY GPIO: Turning sleep mode off"
+    echo "SPOTIFY GPIO: Turning sleep mode off (playing)"
     pigs write 17 0
 elif [ "$PLAYER_EVENT" = "paused" ]; then
-    echo "SPOTIFY GPIO: Turning sleep mode on"
+    echo "SPOTIFY GPIO: Turning sleep mode on (paused)"
     pigs write 17 1
-elif [ "$PLAYER_EVENT" = "stop" ]; then
-    echo "SPOTIFY GPIO: Turning sleep mode on"
+elif [ "$PLAYER_EVENT" = "stopped" ]; then
+    echo "SPOTIFY GPIO: Turning sleep mode on (stopped)"
     pigs write 17 1
 #elif [ "$PLAYER_EVENT" = "start" ]; then
 #   no action

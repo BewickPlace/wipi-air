@@ -41,6 +41,7 @@ pi.set_glitch_filter(3,40000)	# debouce 40ms
 #GPIO.setup(7, GPIO.OUT, initial=GPIO.HIGH)
 pi.set_mode(4, pigpio.OUTPUT)	# pin 7 ~ network status
 pi.write(4, 1)			# initial state
+pi.write(17, 1)			# initial state in Sleep mode
 LED = True
 shutdown = False
 flash = False
