@@ -156,7 +156,7 @@ $wirelessmode = "";
 #echo "Read form:",$readform, "R:", $r, "T:", $t, "<br>";
    ?>
    SSID:      <input type="text" name="networks[<?php (2*$i) ?>]" value="<?php echo $networks[(2*$i)]?>" <?php echo $r ?> size=22 maxlength=20 pattern="[a-zA-Z0-9 _-]+" required title="Alphanumeric and -_ or space">
-   Password:  <input type=<?php echo $t?> name="networks[<?php (2*$i)+1 ?>]" value="<?php echo $networks[(2*$i)+1]?>" <?php echo $r ?> size=12 maxlength=10  pattern="[a-zA-Z0-9]+" required title="Alphanumeric">
+   Password:  <input type=<?php echo $t?> name="networks[<?php (2*$i)+1 ?>]" value="<?php echo $networks[(2*$i)+1]?>" <?php echo $r ?> size=12 maxlength=10 minlength=10  pattern="[a-zA-Z0-9]+" required title="Alphanumeric">
    <?php
    if ($i == 0) {
       echo "default network (not editable)";

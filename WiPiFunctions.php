@@ -306,12 +306,14 @@ if ($existing !== $nets)
 
   while ($i !== $n)
   {
-
+#echo "Apply names d:i:n [", $d, ":", $i, ":", $n, "]<br>";
 	switch (true)			# check for additions/removals
 	{
     	case (($d-$n)<0):			# missing entries in directory
 	   exec(("sudo nmcli con clone 1 ".$d+1), $result, $error);
 #echo "New Clone - error code ", $error, "<br>";
+	   $existing[(2*$d)]   = "ssid";	# dummy entries
+	   $existing[(2*$d)+1] = "psk";		# to force update of clone
 	   $d = $d + 1;
 	   break;
    	case (($d-$n)>0):				# more entries in directory
